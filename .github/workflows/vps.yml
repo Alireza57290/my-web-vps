@@ -1,4 +1,4 @@
-name: Web-Cloud-PC-Cloudflare
+name: Web-Cloud-PC-Final
 
 on: workflow_dispatch
 
@@ -8,15 +8,20 @@ jobs:
     steps:
       - name: Preparing Desktop Environment
         run: |
-          # اجرای دسکتاپ
-          docker run -d -p 6080:80 --name desktop dorowu/ubuntu-desktop-lxde-vnc
+          # اجرای دسکتاپ اوبونتو با پورت 80
+          docker run -d -p 6080:80 --name desktop --shm-size 2g dorowu/ubuntu-desktop-lxde-vnc
+          echo "در حال آماده‌سازی محیط گرافیکی..."
+          sleep 10
           
       - name: Setting Up Cloudflare Tunnel
         run: |
-          # نصب ابزار کلودفلر (بدون نیاز به اکانت و توکن)
+          # نصب و اجرای کلودفلر
           wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
           sudo dpkg -i cloudflared-linux-amd64.deb
           
-          echo "در حال ایجاد لینک مستقیم... لطفا صبر کنید"
-          # ایجاد لینک عمومی
+          echo "------------------------------------------------"
+          echo "لینک جدید شما در حال تولید است..."
+          echo "------------------------------------------------"
+          
+          # ایجاد لینک و نمایش مستقیم در خروجی
           cloudflared tunnel --url http://localhost:6080
