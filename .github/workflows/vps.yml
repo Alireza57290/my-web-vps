@@ -1,4 +1,4 @@
-name: Web-Cloud-PC-New
+name: Web-Cloud-PC-Cloudflare
 
 on: workflow_dispatch
 
@@ -8,19 +8,15 @@ jobs:
     steps:
       - name: Preparing Desktop Environment
         run: |
-          # استفاده از یک ایمیج معتبر و تست شده
-          # این ایمیج یوزرنیم و پسورد نمی‌خواهد و مستقیم روی پورت 80 باز می‌شود
+          # اجرای دسکتاپ
           docker run -d -p 6080:80 --name desktop dorowu/ubuntu-desktop-lxde-vnc
           
-      - name: Setting Up Tunnel (Ngrok)
+      - name: Setting Up Cloudflare Tunnel
         run: |
-          # نصب Ngrok
-          curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
-          echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
-          sudo apt update && sudo apt install ngrok
+          # نصب ابزار کلودفلر (بدون نیاز به اکانت و توکن)
+          wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+          sudo dpkg -i cloudflared-linux-amd64.deb
           
-          # توکن شما
-          ngrok authtoken cr_3DUVyCYuAWpjaqEkrgUO0t8RO2A
-          
-          echo "در حال ایجاد لینک جدید..."
-          ngrok http 6080
+          echo "در حال ایجاد لینک مستقیم... لطفا صبر کنید"
+          # ایجاد لینک عمومی
+          cloudflared tunnel --url http://localhost:6080
