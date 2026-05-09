@@ -1,4 +1,4 @@
-name: Web-Cloud-PC-Ready
+name: Web-Cloud-PC-New
 
 on: workflow_dispatch
 
@@ -8,9 +8,9 @@ jobs:
     steps:
       - name: Preparing Desktop Environment
         run: |
-          # اجرای دسکتاپ اوبونتو مخصوص مرورگر
-          # یوزرنیم: user  |  پسورد: 1234
-          docker run -d -p 6080:80 --name desktop -e USER=user -e PASSWORD=1234 -e RESOLUTION=1280x720 fredblgr/ubuntu-novnc:20.04
+          # استفاده از یک ایمیج معتبر و تست شده
+          # این ایمیج یوزرنیم و پسورد نمی‌خواهد و مستقیم روی پورت 80 باز می‌شود
+          docker run -d -p 6080:80 --name desktop dorowu/ubuntu-desktop-lxde-vnc
           
       - name: Setting Up Tunnel (Ngrok)
         run: |
@@ -19,8 +19,8 @@ jobs:
           echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
           sudo apt update && sudo apt install ngrok
           
-          # استفاده از توکن شما
+          # توکن شما
           ngrok authtoken cr_3DUVyCYuAWpjaqEkrgUO0t8RO2A
           
-          echo "در حال ایجاد لینک..."
+          echo "در حال ایجاد لینک جدید..."
           ngrok http 6080
